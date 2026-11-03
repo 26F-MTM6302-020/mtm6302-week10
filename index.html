@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cat Café — Week 9</title>
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/main.js" defer></script>
+</head>
+
+<body>
+    <main>
+        <header>
+            <div>
+                <p class="eyebrow">MTM6302 · Week 9</p>
+                <h1>Cat Café</h1>
+                <p>Meet the residents. Pick your favourites.</p>
+            </div><button id="theme-toggle" aria-pressed="false">Use dark background</button>
+        </header>
+        <p>Favourites: <strong id="favourite-count">0</strong></p>
+        <div id="gallery" class="gallery"></div>
+        <section class="panel">
+            <h2>Meet a cat</h2>
+            <p>Choose View profile to begin.</p>
+            <div id="profile" hidden><img id="profile-image" alt="">
+                <h3 id="profile-name"></h3>
+                <p id="profile-bio"></p>
+            </div>
+            <form id="notes-form">
+                <fieldset id="notes-fieldset" disabled>
+                    <label for="note">Add a note about the selected cat</label>
+                    <input id="note" name="note" required maxlength="200" autocomplete="off">
+                    <button type="submit">Add note</button>
+                </fieldset>
+            </form>
+            <p class="hint">Notes stay with each cat while this page is open. Refreshing clears them.</p>
+            <ul id="notes-list" aria-label="Notes for the selected cat"></ul>
+        </section>
+
+        <p id="status" role="status"></p>
+        <footer>Practice demo. Cat photos supplied from the existing course reference files.</footer>
+    </main>
+</body>
+
+</html>
