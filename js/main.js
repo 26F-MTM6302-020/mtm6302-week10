@@ -37,6 +37,8 @@ $themeButton.addEventListener("click", toggleTheme)
 function toggleTheme() {
   $isDark = !$isDark // ! - is the not opperator that will reverse the existing value
   updateTheme()
+  // step 1 from week 10 - save choices
+  saveChoices()
 }
 
 function updateTheme() {
@@ -100,6 +102,8 @@ function toggleFavourite($event) {
     $favouriteIds.splice($index, 1)
   }
   updateFavourites()
+  // Week 10 - Step 1 - Save Choices
+  saveChoices()
 }
 
 function updateFavourites() {
@@ -136,6 +140,8 @@ function addNote($event) {
   $notesForm.reset()
   $notesForm.elements.note.focus()
   $status.textContent = "Note added."
+  // Week 10 - Step 1 - Save Choices
+  saveChoices()
 }
 
 function showNotes() {
@@ -170,3 +176,127 @@ function removeNote($event) {
   showNotes()
   $status.textContent = "Note removed"
 }
+
+
+/*===================================
+  Week 10 - Local Storage and Fetch
+===================================*/
+
+// Week 10 - Step 1 - Save the data we already use
+const $storageKey = "mtm6302-cat-cafe-choices"
+
+function saveChoices() {
+  // create an object of existing choices to group them
+  const $choices = { favouriteIds: $favouriteIds, dark: $isDark, notes: $notes }
+  try {
+    localStorage.setItem($storageKey, JSON.stringify($choices))
+    $status.textContent = "Choices and notes are saved."
+  } catch (error) {
+    $status.textContent = "Unable to save choices and notes in browser."
+    console.log(error)
+  }
+}
+
+// Week 10 - Step 2 - Read saved data, then reuse display functions
+function loadChoices() {
+  try {
+    const $savedChoices = localStorage.getItem($storageKey)
+    if ($savedChoices === null) {
+      $status.textContent = "No saved choices found."
+      return
+    }
+    const $choices = JSON.parse($savedChoices)
+    $favouriteIds = $choices.favouriteIds
+    $isDark = $choices.dark
+    $notes = $choices.notes
+
+    updateFavourites()
+    updateTheme()
+    showNotes()
+
+    $status.textContent = "Saved choices and notes restored."
+  } catch (error) {
+    $status.textContent = "Unable to load saved choices."
+    console.log(error)
+  }
+}
+
+// Week 10: Step 3 - calling loadChoices funciton when page laods
+loadChoices()
+
+// Week 10: Step 4 - Reset data and udpate the page
+
+document.getElementById("clear-choices").addEventListener("click", clearChoices)
+
+function clearChoices() {
+  try {
+    localStorage.removeItem($storageKey)
+    $favouriteIds = []
+    $isDark = false
+    $notes = []
+    $selectedCatId = ''
+
+    updateFavourites()
+    updateTheme()
+    showNotes()
+
+    $notesForm.reset()
+    document.getElementById("notes-fieldset").disabled = true
+    document.getElementById("profile").hidden = true
+
+    document.getElementById("fact").textContent = "Click the button to get a cat fact."
+    $status.textContent = "Page reset completed. Saved choices and notes cleared."
+
+  } catch (error) {
+    $status.textContent = "Unable to reset saved choices."
+    console.log(error)
+  }
+}
+
+// Week 10 - Step 5 - Fetch API
+const $factButton = document.getElementById("get-fact")
+const $factOutput = document.getElementById("fact")
+
+$factButton.addEventListener("click", fetchCatFact)
+
+// async keyword to run the funciton asynchronously in the background
+async function fetchCatFact() {
+  $factButton.disabled = true
+  $factOutput.textContent = "loading a cat fact..."
+
+  try {
+    const $response = await fetch("https://catfact.ninja/fact")
+    // if the response.ok is not true, throw an error accessing $response.status
+    if (!$response.ok) throw new Error("HTTP Error " + $response.status)
+
+    const $data = await $response.json()
+
+    $factOutput.textContent = $data.fact
+
+  } catch (error) {
+    $factOutput.textContent = "Unable to load a cat fact. Please try again."
+    console.log(error)
+  }
+  $factButton.disabled = false
+}
+
+// Additional Fetch API Example
+/* 
+async function fetchPhotos() {
+  try {
+    const $response = await fetch("https://jsonplaceholder.typicode.com/photos")
+    // if the response.ok is not true, throw an error accessing $response.status
+    if (!$response.ok) throw new Error("HTTP Error " + $response.status)
+
+    const $data = await $response.json()
+    for (const $img of $data) {
+      console.log($img)
+      const $image = `<img src="${$img.thumbnailUrl}">`
+      $factOutput.insertAdjacentHTML("beforeend", $image)
+    }
+  } catch (error) {
+    $factOutput.textContent = "Unable to load a cat fact. Please try again."
+    console.log(error)
+  }
+}
+fetchPhotos() */

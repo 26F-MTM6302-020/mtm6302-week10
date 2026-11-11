@@ -16,7 +16,9 @@
                 <p class="eyebrow">MTM6302 · Week 9</p>
                 <h1>Cat Café</h1>
                 <p>Meet the residents. Pick your favourites.</p>
-            </div><button id="theme-toggle" aria-pressed="false">Use dark background</button>
+            </div>
+            <button id="theme-toggle" aria-pressed="false">Use dark background</button>
+            <button id="clear-choices" type="button">Reset Page</button>
         </header>
         <p>Favourites: <strong id="favourite-count">0</strong></p>
         <div id="gallery" class="gallery"></div>
@@ -37,7 +39,11 @@
             <p class="hint">Notes stay with each cat while this page is open. Refreshing clears them.</p>
             <ul id="notes-list" aria-label="Notes for the selected cat"></ul>
         </section>
-
+        <section class="panel">
+            <h2>Cat Fact</h2>
+            <button id="get-fact">Get a cat fact</button>
+            <p id="fact">Click the button to get a cat fact.</p>
+        </section>
         <p id="status" role="status"></p>
         <footer>Practice demo. Cat photos supplied from the existing course reference files.</footer>
     </main>
